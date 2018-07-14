@@ -11,7 +11,8 @@ class App extends React.Component {
       persons: [],
       newName: '',
       newNumber: '',
-      filter: ''
+      filter: '',
+      message: null
     }
   }
 
@@ -31,8 +32,12 @@ class App extends React.Component {
           this.setState({
             persons: this.state.persons.concat(response.data),
             newName: '',
-            newNumber: ''
+            newNumber: '',
+            message: 'Lisättiin ' +personObj.name
           })
+          setTimeout(() => {
+            this.setState({message: null})
+          }, 5000)
         })
     }
     else if(call === 'update') {
@@ -49,8 +54,23 @@ class App extends React.Component {
             this.setState({
               persons: persons.concat(response),
               newName: '',
-              newNumber: ''
+              newNumber: '',
+              message: 'Muokattiin käyttäjän '+personObj.name+' puhelinnumeroa'
             })
+            setTimeout(() => {
+              this.setState({message: null})
+            }, 5000)
+          })
+          .catch(error => {
+            this.setState({
+              newName: '',
+              newNumber: '',
+              persons: this.state.persons.filter(person => person.id !== personObj.id),
+              message: "Muutettavan henkilön tiedot on jo poistettu"
+            })
+            setTimeout(() => {
+              this.setState({message: null})
+            }, 5000)
           })
       }
     }
@@ -80,8 +100,12 @@ class App extends React.Component {
         .remove(personId)
         .then(() => {
           this.setState({
-            persons: this.state.persons.filter(n => n.id !== personId)
+            persons: this.state.persons.filter(n => n.id !== personId),
+            message: 'Poistettiin '+person[0].name
           })
+          setTimeout(() => {
+            this.setState({message: null})
+          }, 5000)
         })
     }
   }
@@ -89,6 +113,7 @@ class App extends React.Component {
   render() {
     return (
       <div>
+        <Notification message={this.state.message} />
         <FilterInput
           text="Rajaa näytettäviä: "
           value={this.state.filter}
@@ -110,6 +135,15 @@ class App extends React.Component {
       </div>
     )
   }
+}
+
+const Notification = ({message}) => {
+  if(message === null) {return null}
+  return (
+    <div className="notif">
+      {message}
+    </div>
+  )
 }
 
 export default App
