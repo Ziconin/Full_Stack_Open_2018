@@ -10,5 +10,3 @@ To deploy:
 * Add Procfile to back-end-folder
 * Setup your own Mongo-database
 * Upload to server and link database to server env-values (you might need to config ~/Back/models/person.js for perfect outcome)
-
-Stable version at Heroku: https://shrouded-wave-30436.herokuapp.com/
