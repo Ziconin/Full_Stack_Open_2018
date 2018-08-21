@@ -16,7 +16,15 @@
 }
 
 .blog {
-  color: grey;
-  padding-top: 5px;
-  font-size: 15px;
+  padding-top: 10px;
+  padding-left: 2px;
+  border-style: solid;
+  border-width: 1px;
+  margin-bottom: 5px;
+}
+
+.blogextra {
+  margin-top: 8px;
+  margin-left: 10px;
+  line-height: 1.3;
 }

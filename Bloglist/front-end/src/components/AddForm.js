@@ -72,7 +72,7 @@ class AddForm extends React.Component {
             />
           </div>
           <div>
-            <button type='submit'>Add new blog</button>
+            <button type='submit'>Add</button>
           </div>
         </form>
       </div>

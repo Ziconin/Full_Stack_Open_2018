@@ -5,6 +5,7 @@ import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
 import AddForm from './components/AddForm'
 import Notification from './components/Notification'
+import Togglabel from './components/Togglabel'
 
 class App extends React.Component {
   constructor(props) {
@@ -19,6 +20,9 @@ class App extends React.Component {
 
   async componentDidMount() {
     const allBlogs = await blogService.getAll()
+    allBlogs.sort(function(a,b) {
+      return b.likes - a.likes
+    })
     this.setState({blogs: allBlogs})
 
     const loggedUser = window.localStorage.getItem('loggedBlogAppUser')
@@ -77,6 +81,13 @@ class App extends React.Component {
     blogService.setToken(null)
   }
 
+  handleBlogsUpdate = (newBlogs) => {
+    newBlogs.sort(function(a,b) {
+      return b.likes - a.likes
+    })
+    this.setState({blogs: newBlogs})
+  }
+
   render() {
     if(this.state.user === null) {
       return (
@@ -102,14 +113,15 @@ class App extends React.Component {
             Logged in as {this.state.user.name}
             <button onClick={this.handleLogoutChange}>Log out</button>
           </div>
-          <div>
+          <Togglabel buttonLabel="Add new blog">
             <AddForm
               onSubmit={this.handleNewBlogSubmit}
             />
-          </div>
+          </Togglabel>
           <div>
             <BlogForm
               blogs={this.state.blogs}
+              onUpdate={this.handleBlogsUpdate}
             />
           </div>
         </div>
