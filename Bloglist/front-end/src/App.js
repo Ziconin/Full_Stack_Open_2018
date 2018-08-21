@@ -3,6 +3,8 @@ import blogService from './services/blogs'
 
 import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
+import AddForm from './components/AddForm'
+import Notification from './components/Notification'
 
 class App extends React.Component {
   constructor(props) {
@@ -10,8 +12,7 @@ class App extends React.Component {
     this.state = {
       blogs: [],
       message: '',
-      username: '',
-      password: '',
+      error: false,
       user: null
     }
   }
@@ -33,42 +34,58 @@ class App extends React.Component {
       window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
       blogService.setToken(user.token)
 
+      this.setState({user: user})
+    }
+    else {
       this.setState({
-        username: '',
-        password: '',
-        user: user
+        error: true,
+        message: 'Incorrect username or password'
+      })
+      setTimeout(() => {
+        this.setState({
+          message: null,
+          error: false
+        })
+      }, 5000)
+    }
+  }
+
+  handleNewBlogSubmit = (flag, obj) => {
+    if(flag) {
+      this.setState({
+        message: `A new blog '${obj.title}' by ${obj.author} added`,
+        blogs: this.state.blogs.concat(obj)
       })
     }
     else {
       this.setState({
-        username: '',
-        password: '',
-        message: 'Incorrect username or password'
+        message: 'Blog failed to be added',
+        error: true
       })
-      setTimeout(() => {
-        this.setState({message: null})
-      }, 5000)
     }
-
+    setTimeout(() => {
+      this.setState({
+        message: null,
+        error: false
+      })
+    }, 5000)
   }
 
-  handleLoginChange = (data) => {
-    this.setState({[data.name]: data.value})
-  }
-
-  handleLogoutChange = (data) => {
+  handleLogoutChange = (event) => {
     window.localStorage.removeItem('loggedBlogAppUser')
-    this.setState({[data.name]: data.value})
-    blogService.setToken(data.value)
+    this.setState({user: null})
+    blogService.setToken(null)
   }
 
   render() {
     if(this.state.user === null) {
       return (
         <div>
+          <Notification
+            message={this.state.message}
+            flag={this.state.error}
+          />
           <LoginForm
-            username={this.state.username}
-            password={this.state.password}
             onLoginFieldChange={this.handleLoginChange}
             onSubmit={this.handleLoginFormSubmit}
           />
@@ -77,11 +94,24 @@ class App extends React.Component {
     } else {
       return (
         <div>
-          <BlogForm
-            blogs={this.state.blogs}
-            user={this.state.user}
-            onLogOutClick={this.handleLogoutChange}
+          <Notification
+            message={this.state.message}
+            flag={this.state.error}
           />
+          <div>
+            Logged in as {this.state.user.name}
+            <button onClick={this.handleLogoutChange}>Log out</button>
+          </div>
+          <div>
+            <AddForm
+              onSubmit={this.handleNewBlogSubmit}
+            />
+          </div>
+          <div>
+            <BlogForm
+              blogs={this.state.blogs}
+            />
+          </div>
         </div>
       )
     }

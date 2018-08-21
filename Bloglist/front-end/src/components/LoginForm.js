@@ -6,23 +6,37 @@ class LoginForm extends React.Component {
     super(props)
     this.handleSubmit = this.handleSubmit.bind(this)
     this.onLoginFieldChange = this.onLoginFieldChange.bind(this)
+    this.state = {
+      username: '',
+      password: ''
+    }
   }
 
   async handleSubmit(event) {
     event.preventDefault()
     try {
       const user = await loginService.login({
-        username: this.props.username,
-        password: this.props.password
+        username: this.state.username,
+        password: this.state.password
       })
       this.props.onSubmit(user)
+      this.setState({
+        username: '',
+        password: ''
+      })
     } catch(e) {
+      console.log(e)
       this.props.onSubmit(null)
+      this.setState({
+        username: '',
+        password: ''
+      })
     }
   }
 
   onLoginFieldChange = (event) => {
-    this.props.onLoginFieldChange(event.target)
+    const {name, value} = event.target
+    this.setState({[name]: value})
   }
 
   render () {
@@ -35,7 +49,7 @@ class LoginForm extends React.Component {
             <input
               type="text"
               name="username"
-              value={this.props.username}
+              value={this.state.username}
               onChange={this.onLoginFieldChange}
             />
           </div>
@@ -44,7 +58,7 @@ class LoginForm extends React.Component {
             <input
               type="password"
               name="password"
-              value={this.props.password}
+              value={this.state.password}
               onChange={this.onLoginFieldChange}
             />
           </div>
