@@ -25,18 +25,29 @@ class Blog extends React.Component {
     }
   }
 
+  async onDelete(blog) {
+    try {
+      await blogService
+        .remove(blog.id)
+      this.props.onDelete(blog.id)
+    } catch(e) {
+      console.log(e)
+    }
+  }
+
   render() {
     const blog = this.props.blog
     const user = {...blog.user}
     return (
       <div className="blog">
         <div onClick={this.toggle}>
-          {blog.title} {blog.author}
+          {blog.title} by {blog.author}
         </div>
         <div className="blogextra" style={{display: this.state.disp[this.state.value]}}>
           {blog.url}<br />
-        {blog.likes} likes<button onClick={() => this.onLike(blog)}>like</button><br />
-          Added by {user.name}
+          {blog.likes} likes<button onClick={() => this.onLike(blog)}>like</button><br />
+          Added by {user.name} <br />
+          <button onClick={() => this.onDelete(blog)}>Delete</button>
         </div>
       </div>
     )

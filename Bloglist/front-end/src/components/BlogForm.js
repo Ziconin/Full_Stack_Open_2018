@@ -7,6 +7,11 @@ class BlogForm extends React.Component {
     this.props.onUpdate(this.props.blogs)
   }
 
+  onDeleteButtonClicked = (id) => {
+    const newBlogs = this.props.blogs.filter(blog => blog.id !== id)
+    this.props.onUpdate(newBlogs)
+  }
+
   render() {
     return (
       <div>
@@ -17,6 +22,7 @@ class BlogForm extends React.Component {
               key={blog.id}
               blog={blog}
               onLike={this.onLikeButtonClicked}
+              onDelete={this.onDeleteButtonClicked}
             />
           )}
         </div>

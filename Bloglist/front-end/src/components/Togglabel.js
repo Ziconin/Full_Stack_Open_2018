@@ -21,7 +21,7 @@ export default class Togglabel extends React.Component {
         </div>
         <div style={showWhenVisible}>
           {this.props.children}
-          <button onClick={this.toggle}>Cancel</button>
+          <button onClick={this.toggle}>Close</button>
         </div>
       </div>
     )
