@@ -36,6 +36,7 @@ blogRouter.post('/', async (req, res) => {
     })
 
     const result = await blog.save()
+    Blog.populate(blog, {path: 'user', select: {username: 1, name: 1}})
 
     user.blogs = user.blogs.concat(result._id)
     await user.save()
@@ -65,10 +66,13 @@ blogRouter.delete('/:id', async (req, res) => {
 
     const user = await User.findById(decodedToken.id)
     const blogs = user.blogs.map(blog => blog.toString())
-    
+
     if(!blogs.includes(req.params.id)) {
       return res.status(400).json({error: 'wrong user'})
     }
+
+    user.blogs = user.blogs.filter(blog => blog.id !== req.params.id)
+    await user.save()
 
     await Blog.findByIdAndRemove(req.params.id)
     res.status(204).end()
