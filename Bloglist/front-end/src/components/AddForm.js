@@ -16,9 +16,9 @@ class AddForm extends React.Component {
   async submitNew(event) {
     event.preventDefault()
     try {
-      await blogService
+      const newBlog = await blogService
         .create({...this.state})
-      this.props.onSubmit(true, {...this.state})
+      this.props.onSubmit(true, newBlog)
       this.setState({
         title: '',
         author: '',

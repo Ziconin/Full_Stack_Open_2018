@@ -1,5 +1,6 @@
 import React from 'react'
 import Blog from './Blog'
+import PropTypes from 'prop-types'
 
 class BlogForm extends React.Component {
 
@@ -20,6 +21,7 @@ class BlogForm extends React.Component {
           {this.props.blogs.map(blog =>
             <Blog
               key={blog.id}
+              username={this.props.username}
               blog={blog}
               onLike={this.onLikeButtonClicked}
               onDelete={this.onDeleteButtonClicked}
@@ -29,6 +31,12 @@ class BlogForm extends React.Component {
       </div>
     )
   }
+}
+
+BlogForm.propTypes = {
+  blogs: PropTypes.array.isRequired,
+  onUpdate: PropTypes.func.isRequired,
+  username: PropTypes.string
 }
 
 export default BlogForm

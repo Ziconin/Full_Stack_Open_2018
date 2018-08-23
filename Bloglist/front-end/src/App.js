@@ -20,7 +20,7 @@ class App extends React.Component {
 
   async componentDidMount() {
     const allBlogs = await blogService.getAll()
-    allBlogs.sort(function(a,b) {
+    allBlogs.sort((a,b) => {
       return b.likes - a.likes
     })
     this.setState({blogs: allBlogs})
@@ -82,7 +82,7 @@ class App extends React.Component {
   }
 
   handleBlogsUpdate = (newBlogs) => {
-    newBlogs.sort(function(a,b) {
+    newBlogs.sort((a,b) => {
       return b.likes - a.likes
     })
     this.setState({blogs: newBlogs})
@@ -120,6 +120,7 @@ class App extends React.Component {
           </Togglabel>
           <div>
             <BlogForm
+              username={this.state.user.username}
               blogs={this.state.blogs}
               onUpdate={this.handleBlogsUpdate}
             />
